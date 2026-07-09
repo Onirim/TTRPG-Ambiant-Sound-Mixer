@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TTRPG Mixer</string>
+
+    <string name="slot_ambiance">Ambiance</string>
+    <string name="slot_music">Musique</string>
+
+    <string name="action_load_file">Charger un fichier</string>
+    <string name="no_file_loaded">Aucun fichier chargé</string>
+    <string name="file_unavailable">Fichier indisponible</string>
+
+    <string name="cd_play">Lecture</string>
+    <string name="cd_pause">Pause</string>
+    <string name="label_loop">Boucle</string>
+    <string name="label_volume">Volume</string>
+
+    <string name="notification_channel_name">Lecture audio</string>
+    <string name="notification_title">TTRPG Mixer</string>
+    <string name="notification_text">Lecture en cours</string>
+    <string name="notification_action_stop">Arrêter</string>
+</resources>
