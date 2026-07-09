@@ -16,11 +16,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,13 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.oniri.ttrpgmixer.R
-import com.oniri.ttrpgmixer.ui.theme.FrameGold
-import com.oniri.ttrpgmixer.ui.theme.GildedHighlight
-import com.oniri.ttrpgmixer.ui.theme.PanelDarkBottom
-import com.oniri.ttrpgmixer.ui.theme.PanelDarkTop
-import com.oniri.ttrpgmixer.ui.theme.StoneDark
-import com.oniri.ttrpgmixer.ui.theme.StoneMuted
-import com.oniri.ttrpgmixer.ui.theme.WoodButton
+import com.oniri.ttrpgmixer.ui.theme.LocalAppTheme
 
 private val cardShape = RoundedCornerShape(18.dp)
 private val buttonShape = RoundedCornerShape(8.dp)
@@ -66,6 +63,8 @@ fun SlotPanel(
     onSeek: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val theme = LocalAppTheme.current
+
     Box(modifier = modifier.fillMaxWidth()) {
         // Frame: translucent parchment/leather wash, light enough to let the artwork show through.
         Box(
@@ -73,17 +72,17 @@ fun SlotPanel(
                 .fillMaxSize()
                 .clip(cardShape)
                 .background(
-                    Brush.verticalGradient(listOf(PanelDarkTop.copy(alpha = 0.38f), PanelDarkBottom.copy(alpha = 0.52f))),
+                    Brush.verticalGradient(listOf(theme.panelTop.copy(alpha = 0.38f), theme.panelBottom.copy(alpha = 0.52f))),
                     cardShape
                 )
-                .border(2.dp, FrameGold.copy(alpha = 0.85f), cardShape)
+                .border(2.dp, theme.frameGold.copy(alpha = 0.85f), cardShape)
         )
         // Inner hairline, evokes a Renaissance picture-frame molding.
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(5.dp)
-                .border(1.dp, GildedHighlight.copy(alpha = 0.45f), cardShape)
+                .border(1.dp, theme.gildedHighlight.copy(alpha = 0.45f), cardShape)
         )
 
         val motifStyle = MaterialTheme.typography.titleMedium.copy(color = accentColor.copy(alpha = 0.85f))
@@ -114,7 +113,7 @@ fun SlotPanel(
                         .padding(top = 4.dp)
                         .height(1.dp)
                         .width(72.dp)
-                        .background(FrameGold.copy(alpha = 0.8f))
+                        .background(theme.frameGold.copy(alpha = 0.8f))
                 )
                 Spacer(Modifier.height(12.dp))
 
@@ -195,32 +194,45 @@ fun SlotPanel(
 }
 
 @Composable
-private fun woodButtonColors() = ButtonDefaults.buttonColors(
-    containerColor = WoodButton,
-    contentColor = GildedHighlight
-)
-
-private fun woodButtonBorder() = BorderStroke(1.dp, FrameGold.copy(alpha = 0.8f))
-
-@Composable
-private fun gildedSwitchColors() = SwitchDefaults.colors(
-    checkedThumbColor = GildedHighlight,
-    checkedTrackColor = WoodButton,
-    checkedBorderColor = FrameGold,
-    uncheckedThumbColor = StoneMuted,
-    uncheckedTrackColor = StoneDark,
-    uncheckedBorderColor = FrameGold.copy(alpha = 0.6f)
-)
+private fun woodButtonColors(): ButtonColors {
+    val theme = LocalAppTheme.current
+    return ButtonDefaults.buttonColors(
+        containerColor = theme.woodButton,
+        contentColor = theme.gildedHighlight
+    )
+}
 
 @Composable
-private fun gildedSliderColors() = SliderDefaults.colors(
-    thumbColor = GildedHighlight,
-    activeTrackColor = FrameGold,
-    inactiveTrackColor = StoneDark,
-    disabledThumbColor = StoneMuted,
-    disabledActiveTrackColor = StoneDark,
-    disabledInactiveTrackColor = StoneDark
-)
+private fun woodButtonBorder(): BorderStroke {
+    val theme = LocalAppTheme.current
+    return BorderStroke(1.dp, theme.frameGold.copy(alpha = 0.8f))
+}
+
+@Composable
+private fun gildedSwitchColors(): SwitchColors {
+    val theme = LocalAppTheme.current
+    return SwitchDefaults.colors(
+        checkedThumbColor = theme.gildedHighlight,
+        checkedTrackColor = theme.woodButton,
+        checkedBorderColor = theme.frameGold,
+        uncheckedThumbColor = theme.stoneMuted,
+        uncheckedTrackColor = theme.stoneDark,
+        uncheckedBorderColor = theme.frameGold.copy(alpha = 0.6f)
+    )
+}
+
+@Composable
+private fun gildedSliderColors(): SliderColors {
+    val theme = LocalAppTheme.current
+    return SliderDefaults.colors(
+        thumbColor = theme.gildedHighlight,
+        activeTrackColor = theme.frameGold,
+        inactiveTrackColor = theme.stoneDark,
+        disabledThumbColor = theme.stoneMuted,
+        disabledActiveTrackColor = theme.stoneDark,
+        disabledInactiveTrackColor = theme.stoneDark
+    )
+}
 
 @Composable
 private fun VerticalSlider(

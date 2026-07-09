@@ -20,6 +20,7 @@ class SettingsRepository(private val context: Context) {
     private fun displayNameKey(slot: SlotId) = stringPreferencesKey("${keyPrefix(slot)}_display_name")
     private fun volumeKey(slot: SlotId) = floatPreferencesKey("${keyPrefix(slot)}_volume")
     private fun loopKey(slot: SlotId) = booleanPreferencesKey("${keyPrefix(slot)}_loop")
+    private val themeIdKey = stringPreferencesKey("selected_theme_id")
 
     fun settingsFlow(slot: SlotId): Flow<SlotSettings> =
         context.dataStore.data.map { prefs ->
@@ -55,5 +56,15 @@ class SettingsRepository(private val context: Context) {
 
     suspend fun saveLoop(slot: SlotId, loop: Boolean) {
         context.dataStore.edit { prefs -> prefs[loopKey(slot)] = loop }
+    }
+
+    val themeIdFlow: Flow<String> = context.dataStore.data.map { prefs -> prefs[themeIdKey] ?: DEFAULT_THEME_ID }
+
+    suspend fun saveThemeId(id: String) {
+        context.dataStore.edit { prefs -> prefs[themeIdKey] = id }
+    }
+
+    companion object {
+        const val DEFAULT_THEME_ID = "dragon_dream"
     }
 }

@@ -46,6 +46,16 @@ class MixerViewModel(application: Application) : AndroidViewModel(application) {
         val intent = Intent(application, PlaybackService::class.java)
         application.startService(intent)
         application.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+
+        viewModelScope.launch {
+            val themeId = settingsRepository.themeIdFlow.first()
+            _uiState.update { it.copy(themeId = themeId) }
+        }
+    }
+
+    fun onThemeSelected(id: String) {
+        _uiState.update { it.copy(themeId = id) }
+        viewModelScope.launch { settingsRepository.saveThemeId(id) }
     }
 
     private fun onControllerReady() {

@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import com.oniri.ttrpgmixer.playback.SlotId
 import com.oniri.ttrpgmixer.ui.MainScreen
 import com.oniri.ttrpgmixer.ui.MixerViewModel
+import com.oniri.ttrpgmixer.ui.theme.AppThemes
 import com.oniri.ttrpgmixer.ui.theme.TtrpgMixerTheme
 
 private val AUDIO_MIME_TYPES = arrayOf("audio/mpeg", "audio/mp3", "audio/*")
@@ -47,13 +48,14 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            TtrpgMixerTheme {
+            val uiState by viewModel.uiState.collectAsState()
+            val appTheme = AppThemes.byId(uiState.themeId)
+            TtrpgMixerTheme(appTheme = appTheme) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = Color.Transparent,
                     contentColor = MaterialTheme.colorScheme.onBackground
                 ) {
-                    val uiState by viewModel.uiState.collectAsState()
                     MainScreen(
                         uiState = uiState,
                         onLoadFile = { slot ->
@@ -65,7 +67,8 @@ class MainActivity : ComponentActivity() {
                         onPlayPause = viewModel::onPlayPause,
                         onVolumeChange = viewModel::onVolumeChange,
                         onLoopToggle = viewModel::onLoopToggle,
-                        onSeek = viewModel::onSeek
+                        onSeek = viewModel::onSeek,
+                        onThemeSelected = viewModel::onThemeSelected
                     )
                 }
             }

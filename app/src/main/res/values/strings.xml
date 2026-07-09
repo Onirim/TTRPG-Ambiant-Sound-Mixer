@@ -18,4 +18,7 @@
     <string name="notification_title">TTRPG Mixer</string>
     <string name="notification_text">Lecture en cours</string>
     <string name="notification_action_stop">Arrêter</string>
+
+    <string name="theme_picker_title">Choisir un thème</string>
+    <string name="action_close">Fermer</string>
 </resources>
