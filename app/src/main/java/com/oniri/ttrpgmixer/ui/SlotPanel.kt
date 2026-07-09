@@ -4,15 +4,17 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -48,14 +50,15 @@ import com.oniri.ttrpgmixer.ui.theme.StoneDark
 import com.oniri.ttrpgmixer.ui.theme.StoneMuted
 import com.oniri.ttrpgmixer.ui.theme.WoodButton
 
-private val cardShape = CutCornerShape(topStart = 28.dp, topEnd = 6.dp, bottomStart = 6.dp, bottomEnd = 28.dp)
-private val buttonShape = CutCornerShape(topStart = 10.dp, topEnd = 3.dp, bottomStart = 3.dp, bottomEnd = 10.dp)
+private val cardShape = RoundedCornerShape(18.dp)
+private val buttonShape = RoundedCornerShape(8.dp)
 
 @Composable
 fun SlotPanel(
     title: String,
     state: SlotUiState,
     accentColor: Color,
+    cornerMotif: String,
     onLoadFile: () -> Unit,
     onPlayPause: () -> Unit,
     onVolumeChange: (Float) -> Unit,
@@ -63,109 +66,130 @@ fun SlotPanel(
     onSeek: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(cardShape)
-            .background(
-                Brush.verticalGradient(listOf(PanelDarkTop.copy(alpha = 0.88f), PanelDarkBottom.copy(alpha = 0.93f))),
-                cardShape
-            )
-            .border(1.5.dp, FrameGold.copy(alpha = 0.9f), cardShape)
-            .padding(20.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(
+    Box(modifier = modifier.fillMaxWidth()) {
+        // Frame: translucent parchment/leather wash, light enough to let the artwork show through.
+        Box(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = accentColor
-            )
-            Spacer(
-                Modifier
-                    .padding(top = 4.dp)
-                    .height(1.dp)
-                    .width(72.dp)
-                    .background(FrameGold.copy(alpha = 0.8f))
-            )
-            Spacer(Modifier.height(12.dp))
-
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Button(onClick = onPlayPause, shape = buttonShape, colors = woodButtonColors(), border = woodButtonBorder()) {
-                    Text(if (state.isPlaying) "⏸" else "▶")
-                }
-                Button(onClick = onLoadFile, shape = buttonShape, colors = woodButtonColors(), border = woodButtonBorder()) {
-                    Text(stringResource(R.string.action_load_file))
-                }
-            }
-
-            Spacer(Modifier.height(6.dp))
-            Text(
-                text = state.displayName?.let { name ->
-                    if (state.isAvailable) name else stringResource(R.string.file_unavailable)
-                } ?: stringResource(R.string.no_file_loaded),
-                style = MaterialTheme.typography.bodySmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Spacer(Modifier.height(10.dp))
-
-            var isSeeking by remember { mutableStateOf(false) }
-            var seekPositionMs by remember { mutableFloatStateOf(0f) }
-            val durationMs = state.durationMs.coerceAtLeast(1L).toFloat()
-            val displayedPositionMs = if (isSeeking) seekPositionMs else state.positionMs.toFloat().coerceIn(0f, durationMs)
-
-            Slider(
-                value = displayedPositionMs,
-                valueRange = 0f..durationMs,
-                enabled = state.durationMs > 0,
-                onValueChange = {
-                    isSeeking = true
-                    seekPositionMs = it
-                },
-                onValueChangeFinished = {
-                    onSeek(seekPositionMs.toLong())
-                    isSeeking = false
-                },
-                colors = gildedSliderColors(),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(formatDurationMs(displayedPositionMs.toLong()), style = MaterialTheme.typography.labelSmall)
-                Text(formatDurationMs(state.durationMs), style = MaterialTheme.typography.labelSmall)
-            }
-
-            Spacer(Modifier.height(10.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.label_loop))
-                Spacer(Modifier.width(8.dp))
-                Switch(checked = state.loop, onCheckedChange = onLoopToggle, colors = gildedSwitchColors())
-            }
-        }
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+                .fillMaxSize()
+                .clip(cardShape)
+                .background(
+                    Brush.verticalGradient(listOf(PanelDarkTop.copy(alpha = 0.38f), PanelDarkBottom.copy(alpha = 0.52f))),
+                    cardShape
+                )
+                .border(2.dp, FrameGold.copy(alpha = 0.85f), cardShape)
+        )
+        // Inner hairline, evokes a Renaissance picture-frame molding.
+        Box(
             modifier = Modifier
-                .fillMaxHeight()
-                .width(64.dp)
-                .padding(start = 8.dp)
+                .fillMaxSize()
+                .padding(5.dp)
+                .border(1.dp, GildedHighlight.copy(alpha = 0.45f), cardShape)
+        )
+
+        val motifStyle = MaterialTheme.typography.titleMedium.copy(color = accentColor.copy(alpha = 0.85f))
+        Text(cornerMotif, style = motifStyle, modifier = Modifier.align(Alignment.TopStart).padding(12.dp))
+        Text(cornerMotif, style = motifStyle, modifier = Modifier.align(Alignment.TopEnd).padding(12.dp))
+        Text(cornerMotif, style = motifStyle, modifier = Modifier.align(Alignment.BottomStart).padding(12.dp))
+        Text(cornerMotif, style = motifStyle, modifier = Modifier.align(Alignment.BottomEnd).padding(12.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 28.dp, vertical = 22.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(stringResource(R.string.label_volume), style = MaterialTheme.typography.labelSmall)
-            Spacer(Modifier.height(8.dp))
-            VerticalSlider(
-                value = state.volume,
-                onValueChange = onVolumeChange,
+            Column(
                 modifier = Modifier
-                    .height(160.dp)
-                    .width(48.dp)
-            )
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                    color = accentColor
+                )
+                Spacer(
+                    Modifier
+                        .padding(top = 4.dp)
+                        .height(1.dp)
+                        .width(72.dp)
+                        .background(FrameGold.copy(alpha = 0.8f))
+                )
+                Spacer(Modifier.height(12.dp))
+
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Button(onClick = onPlayPause, shape = buttonShape, colors = woodButtonColors(), border = woodButtonBorder()) {
+                        Text(if (state.isPlaying) "⏸" else "▶")
+                    }
+                    Button(onClick = onLoadFile, shape = buttonShape, colors = woodButtonColors(), border = woodButtonBorder()) {
+                        Text(stringResource(R.string.action_load_file))
+                    }
+                }
+
+                Spacer(Modifier.height(6.dp))
+                Text(
+                    text = state.displayName?.let { name ->
+                        if (state.isAvailable) name else stringResource(R.string.file_unavailable)
+                    } ?: stringResource(R.string.no_file_loaded),
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                Spacer(Modifier.height(10.dp))
+
+                var isSeeking by remember { mutableStateOf(false) }
+                var seekPositionMs by remember { mutableFloatStateOf(0f) }
+                val durationMs = state.durationMs.coerceAtLeast(1L).toFloat()
+                val displayedPositionMs = if (isSeeking) seekPositionMs else state.positionMs.toFloat().coerceIn(0f, durationMs)
+
+                Slider(
+                    value = displayedPositionMs,
+                    valueRange = 0f..durationMs,
+                    enabled = state.durationMs > 0,
+                    onValueChange = {
+                        isSeeking = true
+                        seekPositionMs = it
+                    },
+                    onValueChangeFinished = {
+                        onSeek(seekPositionMs.toLong())
+                        isSeeking = false
+                    },
+                    colors = gildedSliderColors(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(formatDurationMs(displayedPositionMs.toLong()), style = MaterialTheme.typography.labelSmall)
+                    Text(formatDurationMs(state.durationMs), style = MaterialTheme.typography.labelSmall)
+                }
+
+                Spacer(Modifier.height(10.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(R.string.label_loop))
+                    Spacer(Modifier.width(8.dp))
+                    Switch(checked = state.loop, onCheckedChange = onLoopToggle, colors = gildedSwitchColors())
+                }
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(64.dp)
+                    .padding(start = 8.dp)
+            ) {
+                Text(stringResource(R.string.label_volume), style = MaterialTheme.typography.labelSmall)
+                Spacer(Modifier.height(8.dp))
+                VerticalSlider(
+                    value = state.volume,
+                    onValueChange = onVolumeChange,
+                    modifier = Modifier
+                        .height(160.dp)
+                        .width(48.dp)
+                )
+            }
         }
     }
 }

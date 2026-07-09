@@ -38,7 +38,7 @@ fun MainScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF120C08).copy(alpha = 0.45f))
+                .background(Color(0xFF120C08).copy(alpha = 0.18f))
         )
         Column(
             modifier = Modifier
@@ -51,6 +51,7 @@ fun MainScreen(
                 title = stringResource(R.string.slot_music),
                 state = uiState.music,
                 accentColor = MaterialTheme.colorScheme.primary,
+                cornerMotif = "♫",
                 onLoadFile = { onLoadFile(SlotId.MUSIC) },
                 onPlayPause = { onPlayPause(SlotId.MUSIC) },
                 onVolumeChange = { onVolumeChange(SlotId.MUSIC, it) },
@@ -62,6 +63,7 @@ fun MainScreen(
                 title = stringResource(R.string.slot_ambiance),
                 state = uiState.ambiance,
                 accentColor = MaterialTheme.colorScheme.secondary,
+                cornerMotif = "❧",
                 onLoadFile = { onLoadFile(SlotId.AMBIANCE) },
                 onPlayPause = { onPlayPause(SlotId.AMBIANCE) },
                 onVolumeChange = { onVolumeChange(SlotId.AMBIANCE, it) },
