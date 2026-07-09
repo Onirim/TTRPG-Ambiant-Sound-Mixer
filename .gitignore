@@ -10,3 +10,7 @@
 *.apk
 /app/build
 /app/release
+
+# Release signing material — never commit these
+/keystore/
+/keystore.properties

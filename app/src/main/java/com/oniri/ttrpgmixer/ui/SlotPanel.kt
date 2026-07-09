@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -47,9 +46,6 @@ import androidx.compose.ui.unit.dp
 import com.oniri.ttrpgmixer.R
 import com.oniri.ttrpgmixer.ui.theme.LocalAppTheme
 
-private val cardShape = RoundedCornerShape(18.dp)
-private val buttonShape = RoundedCornerShape(8.dp)
-
 @Composable
 fun SlotPanel(
     title: String,
@@ -70,19 +66,19 @@ fun SlotPanel(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .clip(cardShape)
+                .clip(theme.cardShape)
                 .background(
                     Brush.verticalGradient(listOf(theme.panelTop.copy(alpha = 0.38f), theme.panelBottom.copy(alpha = 0.52f))),
-                    cardShape
+                    theme.cardShape
                 )
-                .border(2.dp, theme.frameGold.copy(alpha = 0.85f), cardShape)
+                .border(2.dp, theme.frameGold.copy(alpha = 0.85f), theme.cardShape)
         )
         // Inner hairline, evokes a Renaissance picture-frame molding.
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(5.dp)
-                .border(1.dp, theme.gildedHighlight.copy(alpha = 0.45f), cardShape)
+                .border(1.dp, theme.gildedHighlight.copy(alpha = 0.45f), theme.cardShape)
         )
 
         val motifStyle = MaterialTheme.typography.titleMedium.copy(color = accentColor.copy(alpha = 0.85f))
@@ -118,10 +114,10 @@ fun SlotPanel(
                 Spacer(Modifier.height(12.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Button(onClick = onPlayPause, shape = buttonShape, colors = woodButtonColors(), border = woodButtonBorder()) {
+                    Button(onClick = onPlayPause, shape = theme.buttonShape, colors = woodButtonColors(), border = woodButtonBorder()) {
                         Text(if (state.isPlaying) "⏸" else "▶")
                     }
-                    Button(onClick = onLoadFile, shape = buttonShape, colors = woodButtonColors(), border = woodButtonBorder()) {
+                    Button(onClick = onLoadFile, shape = theme.buttonShape, colors = woodButtonColors(), border = woodButtonBorder()) {
                         Text(stringResource(R.string.action_load_file))
                     }
                 }

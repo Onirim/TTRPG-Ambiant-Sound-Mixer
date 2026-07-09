@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TTRPG Mixer</string>
+    <string name="app_name">SoundWeaver</string>
 
     <string name="slot_ambiance">Ambiance</string>
     <string name="slot_music">Musique</string>
@@ -15,7 +15,7 @@
     <string name="label_volume">Volume</string>
 
     <string name="notification_channel_name">Lecture audio</string>
-    <string name="notification_title">TTRPG Mixer</string>
+    <string name="notification_title">SoundWeaver</string>
     <string name="notification_text">Lecture en cours</string>
     <string name="notification_action_stop">Arrêter</string>
 
